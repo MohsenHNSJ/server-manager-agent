@@ -39,6 +39,7 @@
     "armv",
     "asyncio",
     "autopep",
+    "capsys",
     "celerybeat",
     "charliermarsh",
     "checkmarx",
