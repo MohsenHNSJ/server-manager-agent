@@ -77,7 +77,7 @@ extend-select = [
     "EXE",   # flake8-executable
     "F",     # pyflakes
     "FA",    # flake8-future-annotations
-    "FAST"   # fastapi
+    "FAST",   # fastapi
     "FBT",   # flake8-boolean-trap
     "FLY",   # flynt
     "FURB",  # refurb
@@ -215,8 +215,7 @@ sections = ["project.dependencies"]
 # The path(s) to your virtual environment or site-packages folder.
 venvs = [".venv"]
 # Dependencies you wish to not scan for.
-# exclude-deps =[
-]
+# exclude-deps =[]
 
 # Configure the output of pre-commit-update resulting YAML
 [tool.pre-commit-update.yaml]

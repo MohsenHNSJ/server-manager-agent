@@ -1,4 +1,3 @@
----
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 minimum_pre_commit_version: "4.2.0"
@@ -52,8 +51,6 @@ repos:
       - id: check-dependabot
         # Validate GitHub Workflows
       - id: check-github-workflows
-        # Validate ReadTheDocs config
-      - id: check-readthedocs
         # Validate Github Actions
       - id: check-github-actions
         # Validate Codecov config
@@ -135,7 +132,7 @@ repos:
 
     # Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.13
+    rev: v0.15.15
     hooks:
       # Run the linter
       - id: ruff

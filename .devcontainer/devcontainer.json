@@ -41,5 +41,5 @@
     8000
   ],
   "name": "server-manager-agent",
-  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
 }

@@ -1,8 +1,7 @@
+#!/usr/bin/env python
 """This file is a Python file that defines a set of sessions."""
 
 # pylint: disable=C0103
-import shutil
-from pathlib import Path
 
 import nox
 import nox.sessions
@@ -83,6 +82,7 @@ def ruff_check(session: nox.sessions.Session) -> None:
     else:
         # Else, run checks
         session.run("ruff", "check")
+
 
 @nox.session(name="mypy-type", python=python_version, tags=["type"])
 def mypy_type(session: nox.sessions.Session) -> None:
