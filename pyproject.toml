@@ -44,7 +44,7 @@ nox = "2026.4.10"
 pre-commit = "4.6.0"
 pytest = "9.0.3"
 pytest-codspeed = "4.5.0"
-ruff = "0.15.12"
+ruff = "0.15.15"
 safety = "3.8.1"
 
 # Ruff general settings
