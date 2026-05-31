@@ -1,0 +1,16 @@
+{
+    "Globs": [
+        "**/.git/**",
+        "**/megalinter-reports/**",
+        "**/__pycache__/**",
+        "**/.venv/**",
+        "**/dist/**",
+        "**/build/**"
+    ],
+    "IgnoreRuleIds": [
+        "DS176209",
+        "DS117838",
+        "DS137138",
+        "DS162092"
+    ]
+}

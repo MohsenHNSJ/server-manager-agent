@@ -1,0 +1,46 @@
+---
+version: 2
+updates:
+  # Github Actions update
+  - package-ecosystem: github-actions
+    directory: "/"
+    labels:
+      - "ci"
+    schedule:
+      interval: daily
+
+    # Python dependencies (workflows only)
+  - package-ecosystem: pip
+    directory: "/.github/workflows"
+    labels:
+      - "dependencies"
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+
+    # Python dependencies (all)
+  - package-ecosystem: pip
+    allow:
+      - dependency-type: "all"
+    directory: "/"
+    labels:
+      - "dependencies"
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+
+    # Dockerfile / Container updates
+  - package-ecosystem: docker
+    directory: "/.devcontainer"
+    labels:
+      - "dependencies"
+    schedule:
+      interval: daily
+
+    # Dev container updates
+  - package-ecosystem: devcontainers
+    directory: "/"
+    labels:
+      - "dependencies"
+    schedule:
+      interval: daily

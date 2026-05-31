@@ -1,0 +1,32 @@
+{
+    "ignore": [
+        "**/node_modules/**",
+        "**/.git/**",
+        "**/.rbenv/**",
+        "**/.venv/**",
+        "**/dist/**",
+        "**/build/**",
+        "**/__pycache__/**",
+        "**/report/**",
+        "**/megalinter-reports/**",
+        "**/hardis-report/**",
+        "**/*cache*/**",
+        "**/*.json",
+        "**/*.yaml",
+        "**/*.yml",
+        "**/*.md",
+        "**/*.html",
+        "**/*.xml",
+        "**/*.jpg",
+        "**/*.png",
+        "**/*.svg",
+        "**/*.zip",
+        "**/*.bin"
+    ],
+    "reporters": [
+        "html",
+        "markdown"
+    ],
+    "threshold": 0,
+    "min-tokens": 50
+}
