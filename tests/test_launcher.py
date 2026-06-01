@@ -4,12 +4,15 @@
 from typing import TYPE_CHECKING
 from unittest.mock import patch
 
+import pytest
+
 from server_manager_agent import launcher
 
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
 
+@pytest.mark.benchmark
 @patch("server_manager_agent.launcher.uvicorn.run")
 def test_run_calls_uvicorn_with_expected_config(mock_uvicorn_run: MagicMock) -> None:
     """Test that the run function calls uvicorn.run with the expected configuration."""

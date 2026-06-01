@@ -45,6 +45,7 @@ pytest_requirements: list[str] = [
     "coverage",
     "pytest-asyncio",
     "pytest-codspeed",
+    "httpx2",
 ]
 # Benchmark commands
 benchmark_commands: list[str] = ["pytest", "tests/", "--codspeed", "-rA"]

@@ -4,12 +4,15 @@
 from typing import TYPE_CHECKING
 from unittest.mock import patch
 
+import pytest
+
 from server_manager_agent.services.system_service import get_system_info
 
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
 
+@pytest.mark.benchmark
 @patch("server_manager_agent.services.system_service.platform.system")
 @patch("server_manager_agent.services.system_service.platform.release")
 @patch("server_manager_agent.services.system_service.platform.version")
