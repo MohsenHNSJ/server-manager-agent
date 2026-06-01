@@ -111,7 +111,7 @@ jobs:
 
       - name: Move coverage files to root folder
         run: |
-          find ~/ -type f -name '.coverage.*' -exec mv -t /home/runner/work/Telegram-Bot/Telegram-Bot/ {} +
+          find ~/ -type f -name '.coverage.*' -exec mv -t /home/runner/work/server-manager-agent/server-manager-agent/ {} +
 
       - name: Combine coverage data and report
         run: |
