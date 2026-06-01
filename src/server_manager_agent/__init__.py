@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+# ruff: noqa: EXE002
 """Server Manager Agent.
 --------------------------
 
