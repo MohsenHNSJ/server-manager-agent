@@ -74,7 +74,6 @@ extend-select = [
     "E",     # pycodestyle
     "EM",    # flake8-errmsg
     "ERA",   # eradicate
-    "EXE",   # flake8-executable
     "F",     # pyflakes
     "FA",    # flake8-future-annotations
     "FAST",   # fastapi

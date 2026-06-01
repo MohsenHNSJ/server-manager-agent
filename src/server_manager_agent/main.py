@@ -1,4 +1,3 @@
-# ruff: noqa: EXE002
 """Main entry point for the server manager agent."""
 
 

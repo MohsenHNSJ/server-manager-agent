@@ -1,4 +1,3 @@
-# ruff: noqa: EXE002
 """Server Manager Agent.
 --------------------------
 

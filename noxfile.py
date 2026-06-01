@@ -1,7 +1,6 @@
 """This file is a Python file that defines a set of sessions."""
 
 # pylint: disable=C0103
-# ruff: noqa: EXE002
 import nox
 import nox.sessions
 
