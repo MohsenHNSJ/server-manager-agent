@@ -60,6 +60,7 @@ jobs:
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
         with:
+          httpx2: true
           install-package: true
           pytest: true
           pytest-asyncio: true

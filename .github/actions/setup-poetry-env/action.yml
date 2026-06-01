@@ -3,21 +3,25 @@ name: "setup-poetry-env"
 description: "Composite action to setup Python, Poetry and requirements."
 
 inputs:
-  python-version:
+  checkov:
     required: false
-    description: "The Python version to use"
-    default: "3.14"
+    description: "Whether to install Checkov"
+    default: "false"
   coverage:
     required: false
     description: "Whether to install Coverage"
     default: "false"
-  nox:
-    required: false
-    description: "Whether to install Nox"
-    default: "false"
   install-package:
     required: false
     description: "Whether to install the package itself"
+    default: "false"
+  httpx2:
+    required: false
+    description: "Whether to install httpx2"
+    default: "false"
+  nox:
+    required: false
+    description: "Whether to install Nox"
     default: "false"
   pytest:
     required: false
@@ -31,10 +35,10 @@ inputs:
     required: false
     description: "Whether to install Pytest-Codspeed plugin"
     default: "false"
-  checkov:
+  python-version:
     required: false
-    description: "Whether to install Checkov"
-    default: "false"
+    description: "The Python version to use"
+    default: "3.14"
   py-installer:
     required: false
     description: "Whether to install PyInstaller"
@@ -160,3 +164,9 @@ runs:
 
         echo "UPX location:"
         which upx
+
+    - name: Install httpx2
+      if: ${{ inputs.httpx2 == 'true' }}
+      shell: bash
+      run: |
+        pip install --constraint=.github/workflows/constraints.txt httpx2
