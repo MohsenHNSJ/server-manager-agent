@@ -1,11 +1,10 @@
 """Main entry point for the server manager agent."""
 
+from fastapi import FastAPI
 
-def main() -> None:
-    """Initial main function."""
-    # Print a start message
-    print("Starting server manager agent...")
+from server_manager_agent.api.routes import health, system
 
+app = FastAPI()
 
-if __name__ == "__main__":
-    main()
+app.include_router(health.router)
+app.include_router(system.router)

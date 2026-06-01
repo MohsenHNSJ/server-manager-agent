@@ -231,5 +231,5 @@ def build(session: nox.sessions.Session) -> None:
         "all",
         "--optimize",
         "2",
-        "src/server_manager_agent/main.py",
+        "src/server_manager_agent/launcher.py",
     )
