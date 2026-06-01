@@ -73,6 +73,11 @@ jobs:
         run: |
           nox -s test-${{ matrix.python-version }}
 
+      - name: Debug coverage files
+        run: |
+          echo "Searching for coverage files..."
+          find . -name ".coverage*" || true
+
       # IDEs may warn about env.PYTHON_VERSION might be invalid,
       # but it is a valid environment variable and set at runtime.
       - name: Upload coverage data
@@ -111,7 +116,9 @@ jobs:
 
       - name: Combine coverage data and report
         run: |
-          coverage combine coverage-artifacts
+          ls -R coverage-artifacts || true
+          coverage combine coverage-artifacts || coverage combine
+          coverage report
           coverage xml
 
       - name: Upload coverage report To Codecov
