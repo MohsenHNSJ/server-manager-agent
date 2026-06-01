@@ -5,7 +5,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from server_manager_agent.main import app
-from tests.test_constants import HTTP_STATUS_OK
 
 client = TestClient(app)
 
@@ -14,5 +13,5 @@ client = TestClient(app)
 def test_health() -> None:
     """Test the health endpoint."""
     response = client.get("/health")
-    assert response.status_code == HTTP_STATUS_OK
+    assert response.status_code == 200  # noqa: PLR2004
     assert response.json() == {"status": "ok"}
