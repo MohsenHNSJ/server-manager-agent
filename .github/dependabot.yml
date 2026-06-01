@@ -9,15 +9,6 @@ updates:
     schedule:
       interval: daily
 
-    # Python dependencies (workflows only)
-  - package-ecosystem: pip
-    directory: "/.github/workflows"
-    labels:
-      - "dependencies"
-    schedule:
-      interval: daily
-    versioning-strategy: increase
-
     # Python dependencies (all)
   - package-ecosystem: pip
     allow:
