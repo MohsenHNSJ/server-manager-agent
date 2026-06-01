@@ -27,7 +27,8 @@
   "cSpell.ignorePaths": [
     "**/*CODEOWNERS",
     "**/*gdlintrc",
-    "**/*poetry.lock"
+    "**/*poetry.lock",
+    "**/agent.key"
   ],
   "cSpell.language": "en,fa",
   "cSpell.mergeCSpellSettings": true,
@@ -131,6 +132,7 @@
     "pytype",
     "pyupgrade",
     "pyupio",
+    "redoc",
     "refurb",
     "ropeproject",
     "rstcheck",

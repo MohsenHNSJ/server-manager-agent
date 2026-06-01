@@ -258,3 +258,5 @@ styles/Google
 styles/Joblint
 styles/proselint
 styles/write-good
+src/server_manager_agent/config/agent.key
+agent.key
