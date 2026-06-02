@@ -69,20 +69,23 @@ jobs:
             src/server_manager_agent/launcher.py
 
       - name: Extract version
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Package release artifacts
         run: |
-          mkdir release
+          mkdir -p release
 
           cp dist/server-manager-agent release/
 
-          echo "${VERSION}" > release/VERSION.txt
+          echo "$VERSION" > release/VERSION.txt
 
           cd release
+
           sha256sum server-manager-agent > checksum.sha256
 
-          tar -czf server-manager-agent-linux-x86_64-v${VERSION}.tar.gz \
+          tar -czf "server-manager-agent-linux-x86_64-v${VERSION}.tar.gz" \
             server-manager-agent VERSION.txt checksum.sha256
 
       - name: Upload Release Asset
