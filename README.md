@@ -2,6 +2,14 @@
 
 Server management agent for VPS – عامل مدیریت سرورهای مجازی
 
+Run with the following command to install the agent on your server:
+
+<!-- markdownlint-disable MD013 -->
+```bash
+curl -sSL https://raw.githubusercontent.com/MohsenHNSJ/server-manager-agent/refs/heads/master/install-agent.sh | bash
+```
+<!-- markdownlint-enable MD013 -->
+
 For distribution check: <https://github.com/vinta/awesome-python#distribution>
 
 For FastAPI modules check: <https://github.com/mjhea0/awesome-fastapi#readme>
