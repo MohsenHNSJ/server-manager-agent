@@ -1,0 +1,95 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+permissions:
+  contents: write # Needed to create releases and upload assets
+
+jobs:
+  build:
+    name: Build executable with PyInstaller
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit # Monitor outbound connections
+
+      - name: Check out the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Ensure Poetry cache directory exists
+        run: mkdir -p ~/.cache/pypoetry
+
+      - name: Cache pip
+        id: cache-pip
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Print pip cache status
+        run: |
+          echo "pip cache hit: ${{ steps.cache-pip.outputs.cache-hit }}"
+
+      - name: Cache Poetry
+        id: cache-poetry
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Print Poetry cache status
+        run: |
+          echo "poetry cache hit: ${{ steps.cache-poetry.outputs.cache-hit }}"
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
+        with:
+          py-installer: true
+          upx: true
+          install-package: true
+
+      - name: Build single-file executable with PyInstaller (UPX + INFO log)
+        run: |
+          pyinstaller --onefile \
+            --clean \
+            --console \
+            --noconfirm \
+            --log-level INFO \
+            --optimize 2 \
+            --name server-manager-agent \
+            src/server_manager_agent/launcher.py
+
+      - name: Extract version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Package release artifacts
+        run: |
+          mkdir release
+
+          cp dist/server-manager-agent release/
+
+          echo "${VERSION}" > release/VERSION.txt
+
+          cd release
+          sha256sum server-manager-agent > checksum.sha256
+
+          tar -czf server-manager-agent-linux-x86_64-v${VERSION}.tar.gz \
+            server-manager-agent VERSION.txt checksum.sha256
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        with:
+          working_directory: release
+          files: server-manager-agent-linux-x86_64-v${VERSION}.tar.gz
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

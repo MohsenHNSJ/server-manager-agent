@@ -145,6 +145,7 @@
     "shellcheck",
     "shfmt",
     "snakecase",
+    "softprops",
     "Spyder",
     "spyderproject",
     "spyproject",
