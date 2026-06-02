@@ -79,19 +79,20 @@ jobs:
 
           cp dist/server-manager-agent release/
 
-          echo "$VERSION" > release/VERSION.txt
-
           cd release
 
-          sha256sum server-manager-agent > checksum.sha256
-
           tar -czf "server-manager-agent-linux-x86_64-v${VERSION}.tar.gz" \
-            server-manager-agent VERSION.txt checksum.sha256
+            server-manager-agent
+
+      - name: Compute SHA256 checksum of the release archive
+        run: |
+          cd release
+          sha256sum "server-manager-agent-linux-x86_64-v${VERSION}.tar.gz" > "server-manager-agent-linux-x86_64-v${VERSION}.tar.gz.sha256"
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
-          files: release/*.tar.gz
+          files: release/*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
