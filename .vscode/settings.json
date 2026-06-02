@@ -103,6 +103,7 @@
     "NOXSESSION",
     "ntuples",
     "onedir",
+    "onefile",
     "ossf",
     "pathlib",
     "perflint",
