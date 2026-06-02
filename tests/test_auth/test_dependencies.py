@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
 
+@pytest.mark.benchmark
 @pytest.mark.parametrize(
     ("agent_key", "verify_result", "should_raise"),
     [
