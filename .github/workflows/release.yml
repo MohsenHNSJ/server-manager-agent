@@ -84,6 +84,8 @@ jobs:
           tar -czf "server-manager-agent-linux-x86_64-v${VERSION}.tar.gz" \
             server-manager-agent
 
+          rm server-manager-agent
+
       - name: Compute SHA256 checksum of the release archive
         run: |
           cd release
