@@ -7,7 +7,7 @@ requires = ["poetry-core>=2.4.0"]
 
 [project]
 name = "server-manager-agent"
-version = "1.0.0"
+version = "0.1.0"
 description = "Server management agent for VPS"
 license = "MIT"
 readme = "README.md"
