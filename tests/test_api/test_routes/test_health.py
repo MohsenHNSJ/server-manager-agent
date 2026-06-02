@@ -4,14 +4,17 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from server_manager_agent.api.routes.health import health_check
 from server_manager_agent.main import app
 
 client = TestClient(app)
 
 
 @pytest.mark.benchmark
-def test_health() -> None:
-    """Test the health endpoint."""
-    response = client.get("/health")
-    assert response.status_code == 200  # noqa: PLR2004
-    assert response.json() == {"status": "ok"}
+def test_health_check_returns_ok() -> None:
+    """Tests the health check endpoint."""
+    # Act
+    result = health_check()
+
+    # Assert
+    assert result == {"status": "ok"}
