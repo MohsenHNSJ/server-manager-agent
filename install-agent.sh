@@ -69,17 +69,17 @@ error() {
 trap 'echo "Error: Script failed at line $LINENO." >&2' ERR
 
 # -----------------------------------------------------------------------------
-# Privilege Escalation
+# Privilege Check
 #
-# Installer requires root for:
+# Installer requires root privileges for:
 # - Writing to /opt
 # - Creating systemd service
 #
-# If not root, re-executes itself via sudo.
+# If the script is not run as root, it will exit with an error message.
 # -----------------------------------------------------------------------------
 if [ "${EUID}" -ne 0 ]; then
-	log "Elevating privileges via sudo..."
-	exec sudo bash "$0" "$@"
+	log "Please run this script as root (e.g., with sudo)."
+	exit 1
 fi
 
 # -----------------------------------------------------------------------------
