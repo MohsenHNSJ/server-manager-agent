@@ -6,7 +6,7 @@ Run with the following command to install the agent on your server:
 
 <!-- markdownlint-disable MD013 -->
 ```bash
-curl -sSL https://raw.githubusercontent.com/MohsenHNSJ/server-manager-agent/refs/heads/master/install-agent.sh | bash
+curl -sSL https://raw.githubusercontent.com/MohsenHNSJ/server-manager-agent/refs/heads/master/install-agent.sh | sudo bash
 ```
 <!-- markdownlint-enable MD013 -->
 
