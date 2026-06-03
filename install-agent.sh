@@ -48,6 +48,15 @@ INSTALL_DIR="/opt/${AGENT_NAME}"
 SYSTEMD_SERVICE="/etc/systemd/system/${AGENT_NAME}.service"
 GITHUB_REPO="MohsenHNSJ/${AGENT_NAME}"
 
+# -------------------------------------------------------------------
+# Global variables for downloaded files
+# -------------------------------------------------------------------
+TAR_FILE=""
+SHA_FILE=""
+TMP_DIR=""
+TAR_URL=""
+SHA_URL=""
+
 # -----------------------------------------------------------------------------
 # Logging Utilities
 #
@@ -110,22 +119,36 @@ fetch_latest_release() {
 # -----------------------------------------------------------------------------
 # download_release
 #
-# Downloads:
+# Downloads release artifacts from GitHub:
 # - Release archive (.tar.gz)
 # - SHA256 checksum file
 #
-# Uses temporary working directory under /tmp.
+# Behavior:
+# - Uses a temporary working directory under /tmp
+# - Dynamically extracts filenames from the provided URLs
+# - Preserves original upstream filenames (no renaming)
+#
+# Notes:
+# - Filenames are derived using basename() to ensure compatibility with sha256sum
+# - Both artifacts must match names referenced in the checksum file
 # -----------------------------------------------------------------------------
-
 download_release() {
+	# Fail fast if required inputs are missing
+	: "${TAR_URL:?TAR_URL is not set}"
+	: "${SHA_URL:?SHA_URL is not set}"
+
 	TMP_DIR="/tmp/${AGENT_NAME}"
 	mkdir -p "${TMP_DIR}"
 
+	# Extract filenames from URLs
+	TAR_FILE="$(basename "${TAR_URL}")"
+	SHA_FILE="$(basename "${SHA_URL}")"
+
 	log "Downloading release archive..."
-	curl -sSL "${TAR_URL}" -o "${TMP_DIR}/${AGENT_NAME}.tar.gz"
+	curl -sSL "${TAR_URL}" -o "${TMP_DIR}/${TAR_FILE}"
 
 	log "Downloading checksum file..."
-	curl -sSL "${SHA_URL}" -o "${TMP_DIR}/${AGENT_NAME}.sha256"
+	curl -sSL "${SHA_URL}" -o "${TMP_DIR}/${SHA_FILE}"
 }
 
 # -------------------------------------------------------------------
@@ -152,7 +175,7 @@ verify_checksum() {
 	log "Verifying SHA256 checksum..."
 
 	cd "${TMP_DIR}"
-	sha256sum -c "${AGENT_NAME}.sha256" || error "Checksum verification failed"
+	sha256sum -c "${SHA_FILE}" || error "Checksum verification failed"
 
 	log "Checksum validation passed"
 }
