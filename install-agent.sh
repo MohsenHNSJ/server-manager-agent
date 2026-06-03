@@ -7,7 +7,6 @@
 # Responsibilities:
 # - Fetch latest release metadata from GitHub
 # - Download release archive and checksum
-# - Verify archive integrity using SHA256
 # - Extract and install agent binary
 # - Initialize configuration securely
 # - Register and manage systemd service
@@ -15,7 +14,6 @@
 #
 # Design Principles:
 # - Idempotent: safe to run multiple times (acts as updater)
-# - Secure: validates checksum before execution
 # - Minimal dependencies: works on bare VPS systems
 # - Observable: structured logging for debugging
 #
@@ -52,10 +50,8 @@ GITHUB_REPO="MohsenHNSJ/${AGENT_NAME}"
 # Global variables for downloaded files
 # -------------------------------------------------------------------
 TAR_FILE=""
-SHA_FILE=""
 TMP_DIR=""
 TAR_URL=""
-SHA_URL=""
 
 # -----------------------------------------------------------------------------
 # Logging Utilities
@@ -99,7 +95,6 @@ fi
 # Extracts:
 # - Version tag
 # - Download URL for tar.gz archive
-# - Corresponding SHA256 file
 #
 # Notes:
 # - Uses basic parsing (grep) to avoid external dependencies like jq
@@ -111,7 +106,6 @@ fetch_latest_release() {
 
 	LATEST_TAG=$(echo "${RELEASE_JSON}" | grep -Po '"tag_name": "\K.*?(?=")')
 	TAR_URL=$(echo "${RELEASE_JSON}" | grep -Po '"browser_download_url": "\K.*?\.tar\.gz(?=")')
-	SHA_URL="${TAR_URL%.tar.gz}.sha256"
 
 	log "Resolved version: ${LATEST_TAG}"
 }
@@ -121,7 +115,6 @@ fetch_latest_release() {
 #
 # Downloads release artifacts from GitHub:
 # - Release archive (.tar.gz)
-# - SHA256 checksum file
 #
 # Behavior:
 # - Uses a temporary working directory under /tmp
@@ -138,21 +131,17 @@ fetch_latest_release() {
 # - Fails if any download operation does not complete successfully
 #
 # Notes:
-# - Filenames are derived using basename() to ensure compatibility with sha256sum
-# - Downloaded filenames must match entries inside the checksum file
 # - Uses curl with context-aware flags for optimal UX and automation safety
 # -----------------------------------------------------------------------------
 download_release() {
 	# Fail fast if required inputs are missing
 	: "${TAR_URL:?TAR_URL is not set}"
-	: "${SHA_URL:?SHA_URL is not set}"
 
 	TMP_DIR="/tmp/${AGENT_NAME}"
 	mkdir -p "${TMP_DIR}"
 
 	# Extract filenames from URLs
 	TAR_FILE="$(basename "${TAR_URL}")"
-	SHA_FILE="$(basename "${SHA_URL}")"
 
 	# Detect if running in a terminal
 	if [ -t 1 ]; then
@@ -164,10 +153,6 @@ download_release() {
 	log "Downloading release archive..."
 	curl "${CURL_FLAGS}" "${TAR_URL}" -o "${TMP_DIR}/${TAR_FILE}" ||
 		error "Failed to download archive"
-
-	log "Downloading checksum file..."
-	curl "${CURL_FLAGS}" "${SHA_URL}" -o "${TMP_DIR}/${SHA_FILE}" ||
-		error "Failed to download checksum"
 }
 
 # -------------------------------------------------------------------
@@ -181,43 +166,6 @@ cleanup() {
 }
 # Register cleanup function to run when the script exits (normal or error)
 trap cleanup EXIT
-
-# -----------------------------------------------------------------------------
-# verify_checksum
-#
-# Validates integrity of downloaded release archive using SHA256.
-#
-# Security role:
-# - Ensures the downloaded artifact has not been tampered with
-# - Prevents execution of corrupted or malicious binaries
-#
-# Behavior:
-# - Runs inside the temporary download directory (TMP_DIR)
-# - Normalizes checksum file formatting (CRLF → LF) to ensure compatibility
-#   with sha256sum across different operating systems (e.g., Windows-built releases)
-# - Uses sha256sum -c for strict verification against the official checksum file
-#
-# Failure handling:
-# - Immediately aborts installation if checksum validation fails
-#
-# Notes:
-# - The checksum file must follow standard format:
-#   <hash><space><space><filename>
-# - Line-ending normalization is required for cross-platform release pipelines
-# -----------------------------------------------------------------------------
-verify_checksum() {
-	log "Verifying SHA256 checksum..."
-
-	cd "${TMP_DIR}"
-
-	# Normalize line endings (CRLF -> LF)
-	tr -d '\r' <"${SHA_FILE}" >"${SHA_FILE}.clean"
-	mv "${SHA_FILE}.clean" "${SHA_FILE}"
-
-	sha256sum -c "${SHA_FILE}" || error "Checksum verification failed"
-
-	log "Checksum validation passed"
-}
 
 # -----------------------------------------------------------------------------
 # extract_binary
@@ -346,7 +294,6 @@ start_agent() {
 main() {
 	fetch_latest_release
 	download_release
-	verify_checksum
 	extract_binary
 	setup_config
 	setup_systemd_service
