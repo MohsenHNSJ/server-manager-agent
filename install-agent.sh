@@ -63,10 +63,10 @@ SHA_URL=""
 # Provides consistent, timestamped logs for observability.
 # -----------------------------------------------------------------------------
 log() {
-	printf "\n[%s] [INFO] %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" "$1"
+	printf "[%s] [INFO] %s\n" "$(date +'%H:%M:%S.%3N')" "$1"
 }
 error() {
-	printf "\n[%s] [ERROR] %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" "$1" >&2
+	printf "[%s] [ERROR] %s\n" "$(date +'%H:%M:%S.%3N')" "$1" >&2
 	exit 1
 }
 
@@ -175,6 +175,11 @@ verify_checksum() {
 	log "Verifying SHA256 checksum..."
 
 	cd "${TMP_DIR}"
+
+	# Normalize line endings (CRLF -> LF)
+	tr -d '\r' <"${SHA_FILE}" >"${SHA_FILE}.clean"
+	mv "${SHA_FILE}.clean" "${SHA_FILE}"
+
 	sha256sum -c "${SHA_FILE}" || error "Checksum verification failed"
 
 	log "Checksum validation passed"
