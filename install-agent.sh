@@ -180,7 +180,7 @@ extract_binary() {
 	log "Installing agent to ${INSTALL_DIR}..."
 
 	mkdir -p "${INSTALL_DIR}"
-	tar -xzf "${TMP_DIR}/${AGENT_NAME}.tar.gz" -C "${INSTALL_DIR}"
+	tar -xzf "${TMP_DIR}/${TAR_FILE}" -C "${INSTALL_DIR}"
 	chmod +x "${INSTALL_DIR}/${AGENT_NAME}"
 }
 
