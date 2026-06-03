@@ -127,10 +127,20 @@ fetch_latest_release() {
 # - Uses a temporary working directory under /tmp
 # - Dynamically extracts filenames from the provided URLs
 # - Preserves original upstream filenames (no renaming)
+# - Detects execution context (interactive vs non-interactive)
+#
+# Output behavior:
+# - Interactive (TTY): shows curl progress bar for downloads
+# - Non-interactive (CI/automation): runs silently
+#
+# Error handling:
+# - Fails immediately if required URLs are unset
+# - Fails if any download operation does not complete successfully
 #
 # Notes:
 # - Filenames are derived using basename() to ensure compatibility with sha256sum
-# - Both artifacts must match names referenced in the checksum file
+# - Downloaded filenames must match entries inside the checksum file
+# - Uses curl with context-aware flags for optimal UX and automation safety
 # -----------------------------------------------------------------------------
 download_release() {
 	# Fail fast if required inputs are missing
@@ -144,11 +154,20 @@ download_release() {
 	TAR_FILE="$(basename "${TAR_URL}")"
 	SHA_FILE="$(basename "${SHA_URL}")"
 
+	# Detect if running in a terminal
+	if [ -t 1 ]; then
+		CURL_FLAGS="--progress-bar -L"
+	else
+		CURL_FLAGS="-sSL"
+	fi
+
 	log "Downloading release archive..."
-	curl -sSL "${TAR_URL}" -o "${TMP_DIR}/${TAR_FILE}"
+	curl "${CURL_FLAGS}" "${TAR_URL}" -o "${TMP_DIR}/${TAR_FILE}" ||
+		error "Failed to download archive"
 
 	log "Downloading checksum file..."
-	curl -sSL "${SHA_URL}" -o "${TMP_DIR}/${SHA_FILE}"
+	curl "${CURL_FLAGS}" "${SHA_URL}" -o "${TMP_DIR}/${SHA_FILE}" ||
+		error "Failed to download checksum"
 }
 
 # -------------------------------------------------------------------
@@ -166,10 +185,25 @@ trap cleanup EXIT
 # -----------------------------------------------------------------------------
 # verify_checksum
 #
-# Validates integrity of downloaded archive using SHA256.
+# Validates integrity of downloaded release archive using SHA256.
 #
-# Security Critical:
-# - Prevents execution of tampered or corrupted binaries
+# Security role:
+# - Ensures the downloaded artifact has not been tampered with
+# - Prevents execution of corrupted or malicious binaries
+#
+# Behavior:
+# - Runs inside the temporary download directory (TMP_DIR)
+# - Normalizes checksum file formatting (CRLF → LF) to ensure compatibility
+#   with sha256sum across different operating systems (e.g., Windows-built releases)
+# - Uses sha256sum -c for strict verification against the official checksum file
+#
+# Failure handling:
+# - Immediately aborts installation if checksum validation fails
+#
+# Notes:
+# - The checksum file must follow standard format:
+#   <hash><space><space><filename>
+# - Line-ending normalization is required for cross-platform release pipelines
 # -----------------------------------------------------------------------------
 verify_checksum() {
 	log "Verifying SHA256 checksum..."
