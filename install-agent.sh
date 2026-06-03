@@ -156,7 +156,7 @@ download_release() {
 
 	# Detect if running in a terminal
 	if [ -t 1 ]; then
-		CURL_FLAGS="--progress-bar -L"
+		CURL_FLAGS="-L"
 	else
 		CURL_FLAGS="-sSL"
 	fi
