@@ -40,7 +40,7 @@ poetry-plugin-export = "1.10.0"
 [tool.poetry.group.dev.dependencies]
 checkov = "3.2.529"
 coverage = "7.14.1"
-httpx2 = "2.2.0"
+httpx2 = "2.3.0"
 mypy = "2.1.0"
 nox = "2026.4.10"
 nox-poetry = "1.2.0"
