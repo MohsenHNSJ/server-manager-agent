@@ -41,7 +41,9 @@ jobs:
 
       - name: Print pip cache status
         run: |
-          echo "pip cache hit: ${{ steps.cache-pip.outputs.cache-hit }}"
+          echo "pip cache hit: ${CACHE_HIT}"
+        env:
+          CACHE_HIT: ${{ steps.cache-pip.outputs.cache-hit }}
 
       - name: Cache Poetry
         id: cache-poetry
@@ -54,7 +56,9 @@ jobs:
 
       - name: Print Poetry cache status
         run: |
-          echo "poetry cache hit: ${{ steps.cache-poetry.outputs.cache-hit }}"
+          echo "poetry cache hit: ${CACHE_HIT}"
+        env:
+          CACHE_HIT: ${{ steps.cache-poetry.outputs.cache-hit }}
 
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
