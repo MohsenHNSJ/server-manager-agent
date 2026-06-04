@@ -6,7 +6,7 @@
 #
 # Responsibilities:
 # - Fetch latest release metadata from GitHub
-# - Download release archive and checksum
+# - Download release archive
 # - Extract and install agent binary
 # - Initialize configuration securely
 # - Register and manage systemd service
@@ -20,6 +20,7 @@
 # Installation Layout:
 # /opt/server-manager-agent/
 # ├── server-manager-agent (binary)
+# └── agent.key             (API credential, mode 600)
 #
 # Service:
 # - systemd unit: /etc/systemd/system/server-manager-agent.service
@@ -50,8 +51,9 @@ GITHUB_REPO="MohsenHNSJ/${AGENT_NAME}"
 # Global variables for downloaded files
 # -------------------------------------------------------------------
 TAR_FILE=""
-TMP_DIR=""
+TMP_DIR="/tmp/${AGENT_NAME}"
 TAR_URL=""
+LATEST_TAG=""
 
 # -----------------------------------------------------------------------------
 # Logging Utilities
@@ -71,7 +73,7 @@ error() {
 #
 # Captures the line number of any failure to aid debugging.
 # -----------------------------------------------------------------------------
-trap 'echo "Error: Script failed at line $LINENO." >&2' ERR
+trap 'echo "Error: Script failed at line $LINENO: ${BASH_COMMAND}" >&2' ERR
 
 # -----------------------------------------------------------------------------
 # Privilege Check
@@ -131,13 +133,12 @@ fetch_latest_release() {
 # - Fails if any download operation does not complete successfully
 #
 # Notes:
+# - Uses --retry 3 for transient network failures
 # - Uses curl with context-aware flags for optimal UX and automation safety
 # -----------------------------------------------------------------------------
 download_release() {
 	# Fail fast if required inputs are missing
 	: "${TAR_URL:?TAR_URL is not set}"
-
-	TMP_DIR="/tmp/${AGENT_NAME}"
 	mkdir -p "${TMP_DIR}"
 
 	# Extract filenames from URLs
@@ -145,13 +146,13 @@ download_release() {
 
 	# Detect if running in a terminal
 	if [ -t 1 ]; then
-		CURL_FLAGS="-L"
+		CURL_FLAGS="-#L"
 	else
 		CURL_FLAGS="-sSL"
 	fi
 
 	log "Downloading release archive..."
-	curl "${CURL_FLAGS}" "${TAR_URL}" -o "${TMP_DIR}/${TAR_FILE}" ||
+	curl --fail --retry 3 "${CURL_FLAGS}" "${TAR_URL}" -o "${TMP_DIR}/${TAR_FILE}" ||
 		error "Failed to download archive"
 }
 
@@ -215,7 +216,7 @@ setup_config() {
 		log "Found uploaded agent.key in /tmp/${AGENT_NAME}/ — installing..."
 
 		mkdir -p "${INSTALL_DIR}"
-		mv "${KEY_SOURCE_TMP}" "${KEY_TARGET}"
+		mv -f "${KEY_SOURCE_TMP}" "${KEY_TARGET}"
 
 		chmod 600 "${KEY_TARGET}"
 
@@ -266,9 +267,7 @@ EOF
 # -----------------------------------------------------------------------------
 # start_agent
 #
-# Starts or restarts the agent service.
-#
-# Also prints current service status for visibility.
+# Stops and starts the agent service.
 # -----------------------------------------------------------------------------
 start_agent() {
 	log "Starting agent service..."
@@ -285,11 +284,10 @@ start_agent() {
 # Flow:
 # 1. Fetch release metadata
 # 2. Download assets
-# 3. Verify integrity
-# 4. Install binary
-# 5. Configure environment
-# 6. Register systemd service
-# 7. Start service
+# 3. Install binary
+# 4. Install API Key
+# 5. Register systemd service
+# 6. Start service
 # -----------------------------------------------------------------------------
 main() {
 	fetch_latest_release
