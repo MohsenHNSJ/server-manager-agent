@@ -54,6 +54,7 @@ TAR_FILE=""
 TMP_DIR="/tmp/${AGENT_NAME}"
 TAR_URL=""
 LATEST_TAG=""
+KEY_SOURCE_TMP="/tmp/${AGENT_NAME}/agent.key"
 
 # -----------------------------------------------------------------------------
 # Logging Utilities
@@ -88,6 +89,54 @@ if [ "${EUID}" -ne 0 ]; then
 	log "Please run this script as root (e.g., with sudo)."
 	exit 1
 fi
+
+# -----------------------------------------------------------------------------
+# remove_existing_agent
+#
+# If an existing agent installation is detected:
+# - Stops the systemd service
+# - Disables and removes the systemd unit
+# - Removes installation directory completely while preserving the key
+# -----------------------------------------------------------------------------
+remove_existing_agent() {
+	if [ -d "${INSTALL_DIR}" ]; then
+		log "Existing agent detected — removing previous installation..."
+
+		# Stop service if running
+		if systemctl is-active --quiet "${AGENT_NAME}"; then
+			systemctl stop "${AGENT_NAME}"
+			log "Agent service stopped"
+		fi
+
+		# Disable and remove systemd service if exists
+		if [ -f "${SYSTEMD_SERVICE}" ]; then
+			systemctl disable "${AGENT_NAME}"
+			rm -f "${SYSTEMD_SERVICE}"
+			systemctl daemon-reload
+			log "Systemd service removed"
+		fi
+
+		# Key handling logic
+		if [ -f "${KEY_SOURCE_TMP}" ]; then
+			log "New agent key detected in ${KEY_SOURCE_TMP} — will use it (discarding old key)"
+		elif [ -f "${INSTALL_DIR}/agent.key" ]; then
+			log "No new key provided — preserving existing key"
+
+			mkdir -p "$(dirname "${KEY_SOURCE_TMP}")"
+
+			mv "${INSTALL_DIR}/agent.key" "${KEY_SOURCE_TMP}" ||
+				error "Failed to preserve existing agent key"
+
+			log "Existing agent key preserved in ${KEY_SOURCE_TMP}"
+		else
+			log "No agent key found to preserve"
+		fi
+
+		# Remove installation directory
+		rm -rf "${INSTALL_DIR}"
+		log "Installation directory removed"
+	fi
+}
 
 # -----------------------------------------------------------------------------
 # fetch_latest_release
@@ -204,7 +253,6 @@ extract_binary() {
 # - Prevents accidental exposure of credentials
 # -----------------------------------------------------------------------------
 setup_config() {
-	KEY_SOURCE_TMP="/tmp/${AGENT_NAME}/agent.key"
 	KEY_TARGET="${INSTALL_DIR}/agent.key"
 
 	if [ -f "${KEY_TARGET}" ]; then
@@ -282,6 +330,7 @@ start_agent() {
 # Orchestrates the full installation/update workflow.
 #
 # Flow:
+# 0. Remove existing agent if present
 # 1. Fetch release metadata
 # 2. Download assets
 # 3. Install binary
@@ -290,11 +339,25 @@ start_agent() {
 # 6. Start service
 # -----------------------------------------------------------------------------
 main() {
+	# Step 0: Remove existing agent if present
+	remove_existing_agent
+
+	# Step 1: Fetch latest release metadata
 	fetch_latest_release
+
+	# Step 2: Download release
 	download_release
+
+	# Step 3: Extract binary
 	extract_binary
+
+	# Step 4: Install API key
 	setup_config
+
+	# Step 5: Setup systemd service
 	setup_systemd_service
+
+	# Step 6: Start service
 	start_agent
 
 	log "Installation/update completed successfully"
