@@ -13,3 +13,7 @@ curl -sSL https://raw.githubusercontent.com/MohsenHNSJ/server-manager-agent/refs
 For distribution check: <https://github.com/vinta/awesome-python#distribution>
 
 For FastAPI modules check: <https://github.com/mjhea0/awesome-fastapi#readme>
+
+For FastAPI documentation check: <https://fastapi.tiangolo.com/learn/>
+
+For ComposeUI check: <https://composables.com/>
