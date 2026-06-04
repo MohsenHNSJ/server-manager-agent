@@ -229,3 +229,6 @@ venvs = [".venv"]
 mapping = 4
 sequence = 4
 offset = 2
+
+[tool.fastapi]
+entrypoint = "src.server_manager_agent.main:app"
