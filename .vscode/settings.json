@@ -38,6 +38,7 @@
     "apdisk",
     "arepl",
     "armv",
+    "artipacked",
     "ASGI",
     "asyncio",
     "autopep",
@@ -160,7 +161,8 @@
     "venv",
     "venvs",
     "virtualenvs",
-    "webassets"
+    "webassets",
+    "zizmor"
   ],
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
