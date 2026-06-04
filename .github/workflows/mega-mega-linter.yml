@@ -3,9 +3,12 @@
 # More info at https://megalinter.io
 name: Run Mega-MegaLinter
 
-# This action only runs on "master" branch as it takes too much time and only on PR.
+# This action only runs on "master" branch as it takes too much time.
 on:
   pull_request:
+    branches:
+      - master
+  push:
     branches:
       - master
 
