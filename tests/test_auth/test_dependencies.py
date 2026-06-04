@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     ],
 )
 @patch("server_manager_agent.auth.dependencies.verify_agent_key")
-def test_require_agent_key_parametrized(
+async def test_require_agent_key_parametrized(
     mock_verify: MagicMock,
     agent_key: str | None,
     *,
@@ -38,12 +38,12 @@ def test_require_agent_key_parametrized(
     # Act / Assert
     if should_raise:
         with pytest.raises(HTTPException) as exc:
-            require_agent_key(agent_key)
+            await require_agent_key(agent_key)
 
         assert exc.value.status_code == 401  # noqa: PLR2004
         assert exc.value.detail == "Unauthorized"
     else:
-        result = require_agent_key(  # type: ignore[func-returns-value]
+        result = await require_agent_key(  # type: ignore[func-returns-value]
             agent_key,
         )
         assert result is None

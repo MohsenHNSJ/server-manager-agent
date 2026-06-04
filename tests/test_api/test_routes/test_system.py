@@ -18,7 +18,7 @@ client = TestClient(app)
 
 @pytest.mark.benchmark
 @patch("server_manager_agent.api.routes.system.get_system_info")
-def test_system_info_returns_system_data(mock_get_system_info: MagicMock) -> None:
+async def test_system_info_returns_system_data(mock_get_system_info: MagicMock) -> None:
     """Tests the system endpoint."""
     # Arrange
     expected: dict[str, str] = {
@@ -29,7 +29,7 @@ def test_system_info_returns_system_data(mock_get_system_info: MagicMock) -> Non
     mock_get_system_info.return_value = expected
 
     # Act
-    result = system_info()
+    result = await system_info()
 
     # Assert
     assert result == expected

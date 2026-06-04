@@ -3,7 +3,7 @@
 import platform
 
 
-def get_system_info() -> dict[str, str]:
+async def get_system_info() -> dict[str, str]:
     """Get system information.
 
     Returns:

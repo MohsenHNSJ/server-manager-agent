@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from psutil._ntuples import sdiskusage, svmem
 
 
-def get_metrics() -> dict[str, Any]:
+async def get_metrics() -> dict[str, Any]:
     """Collect system metrics."""
     virtual_memory: svmem = psutil.virtual_memory()
     disk_usage: sdiskusage = psutil.disk_usage("/")

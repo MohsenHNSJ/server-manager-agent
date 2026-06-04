@@ -1,8 +1,9 @@
 """Tests for agent key module."""
-# ruff: noqa: S101
 
+# ruff: noqa: S101
+# pyright: reportUnboundVariable=false
 from typing import TYPE_CHECKING
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -14,43 +15,64 @@ if TYPE_CHECKING:
 
 @pytest.mark.benchmark
 @pytest.mark.parametrize(
-    ("file_content", "side_effect", "expected", "should_raise"),
+    ("file_content", "open_side_effect", "expected", "should_raise"),
     [
         ("  secret-key-123  ", None, "secret-key-123", False),
         (None, FileNotFoundError, None, True),
     ],
 )
-@patch("server_manager_agent.auth.agent_key.AGENT_KEY_FILE")
-def test_load_agent_key_parametrized(
-    mock_file: MagicMock,
+@patch("server_manager_agent.auth.agent_key.anyio.open_file")
+async def test_load_agent_key_parametrized_anyio(
+    mock_open_file: MagicMock,
     file_content: str | None,
-    side_effect: Exception | None,
+    open_side_effect: Exception | None,
     expected: str | None,
     *,
     should_raise: bool,
 ) -> None:
-    """Test the load_agent_key function with different scenarios."""
+    """Test load_agent_key using AnyIO async file API."""
+    # -------------------------
     # Arrange
-    if side_effect:
-        mock_file.read_text.side_effect = side_effect
+    # -------------------------
+    if open_side_effect:
+        mock_open_file.side_effect = open_side_effect
     else:
-        mock_file.read_text.return_value = file_content
+        mock_file = AsyncMock()
+        mock_file.read.return_value = file_content
 
+        mock_cm = AsyncMock()
+        mock_cm.__aenter__.return_value = mock_file
+        mock_cm.__aexit__.return_value = None
+
+        mock_open_file.return_value = mock_cm
+
+    # -------------------------
     # Act / Assert
+    # -------------------------
     if should_raise:
         with pytest.raises(RuntimeError) as exc:
-            load_agent_key()
+            await load_agent_key()
 
-        # message check
         assert str(exc.value) == "Missing Agent key file: agent.key"
-
-        # verify exception chaining
         assert isinstance(exc.value.__cause__, FileNotFoundError)
 
+        mock_open_file.assert_called_once()
+
     else:
-        result = load_agent_key()
+        result = await load_agent_key()
+
         assert result == expected
-        mock_file.read_text.assert_called_once_with(encoding="utf-8")
+
+        mock_open_file.assert_called_once()
+        args, kwargs = mock_open_file.call_args
+
+        # verify correct file + options passed
+        assert str(args[0]) == "agent.key"
+        assert kwargs["mode"] == "r"
+        assert kwargs["encoding"] == "utf-8"
+
+        # verify read happened
+        mock_file.read.assert_awaited_once()
 
 
 @pytest.mark.benchmark
@@ -65,7 +87,7 @@ def test_load_agent_key_parametrized(
     ],
 )
 @patch("server_manager_agent.auth.agent_key.load_agent_key")
-def test_verify_agent_key(
+async def test_verify_agent_key(
     mock_load_agent_key: MagicMock,
     provided_key: str | None,
     loaded_key: str,
@@ -77,7 +99,7 @@ def test_verify_agent_key(
     mock_load_agent_key.return_value = loaded_key
 
     # Act
-    result = verify_agent_key(provided_key)
+    result = await verify_agent_key(provided_key)
 
     # Assert
     assert result is expected

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 @pytest.mark.benchmark
 @patch("server_manager_agent.api.routes.metrics.get_metrics")
-def test_metrics_returns_metrics_data(mock_get_metrics: MagicMock) -> None:
+async def test_metrics_returns_metrics_data(mock_get_metrics: MagicMock) -> None:
     """Tests the metrics endpoint."""
     # Arrange
     expected = {
@@ -25,7 +25,7 @@ def test_metrics_returns_metrics_data(mock_get_metrics: MagicMock) -> None:
     mock_get_metrics.return_value = expected
 
     # Act
-    result = metrics()
+    result = await metrics()
 
     # Assert
     assert result == expected

@@ -8,10 +8,10 @@ router = APIRouter()
 
 
 @router.get("/system")
-def system_info() -> dict[str, str]:
+async def system_info() -> dict[str, str]:
     """Returns system stats.
 
     Returns:
         dict[str, str]: a dictionary containing the system, release, and version information.
     """
-    return get_system_info()
+    return await get_system_info()

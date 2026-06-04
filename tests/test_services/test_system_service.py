@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 @patch("server_manager_agent.services.system_service.platform.system")
 @patch("server_manager_agent.services.system_service.platform.release")
 @patch("server_manager_agent.services.system_service.platform.version")
-def test_get_system_info(
+async def test_get_system_info(
     mock_version: MagicMock,
     mock_release: MagicMock,
     mock_system: MagicMock,
@@ -34,7 +34,7 @@ def test_get_system_info(
     }
 
     # Act
-    result = get_system_info()
+    result = await get_system_info()
 
     # Assert
     assert result == expected

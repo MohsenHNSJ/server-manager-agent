@@ -11,10 +11,10 @@ client = TestClient(app)
 
 
 @pytest.mark.benchmark
-def test_health_check_returns_ok() -> None:
+async def test_health_check_returns_ok() -> None:
     """Tests the health check endpoint."""
     # Act
-    result = health_check()
+    result = await health_check()
 
     # Assert
     assert result == {"status": "ok"}

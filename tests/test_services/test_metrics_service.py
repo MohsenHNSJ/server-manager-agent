@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 @patch("server_manager_agent.services.metrics_service.psutil.cpu_percent")
 @patch("server_manager_agent.services.metrics_service.psutil.disk_usage")
 @patch("server_manager_agent.services.metrics_service.psutil.virtual_memory")
-def test_get_metrics(
+async def test_get_metrics(
     mock_virtual_memory: MagicMock,
     mock_disk_usage: MagicMock,
     mock_cpu_percent: MagicMock,
@@ -62,7 +62,7 @@ def test_get_metrics(
     }
 
     # Act
-    result = get_metrics()
+    result = await get_metrics()
 
     # Assert
     assert result == expected
