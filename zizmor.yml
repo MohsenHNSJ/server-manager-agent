@@ -1,15 +1,4 @@
 rules:
-  artipacked:
-    ignore:
-      - mega-linter.yml
-  # ref-version-mismatch flags cosmetic mismatches between pinned SHA refs
-  # and their inline "# vX" comments. Hashes themselves are correctly pinned
-  # (the actual supply-chain property); the trailing comments are docs only,
-  # and renovate updates the hashes without rewriting them. New audit added
-  # in zizmor 1.25.0 (#7816).
-  ref-version-mismatch:
-    ignore:
-      - mega-linter.yml
   superfluous-actions:
     ignore:
       - release.yml
