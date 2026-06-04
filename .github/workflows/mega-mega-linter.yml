@@ -3,11 +3,11 @@
 # More info at https://megalinter.io
 name: Run Mega-MegaLinter
 
-# This action only runs on "dev" and "main" branch as it takes too much time and only on PR.
+# This action only runs on "master" branch as it takes too much time and only on PR.
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}

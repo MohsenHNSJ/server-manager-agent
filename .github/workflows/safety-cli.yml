@@ -2,12 +2,12 @@
 name: Safety-CLI Scanner
 
 # Safety CLI in free tier has a limit of 100 checks per month
-# So we only run in for Pushes and PRs to main
+# So we only run in for Pushes and PRs to master
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
   pull_request:
-    branches: ["main"]
+    branches: ["master"]
 
 permissions:
   contents: read
