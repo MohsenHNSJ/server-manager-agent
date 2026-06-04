@@ -35,10 +35,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Print pip cache status
-        run: |
-          echo "pip cache hit: ${{ steps.cache-pip.outputs.cache-hit }}"
-
       - name: Cache Poetry
         id: cache-poetry
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -47,10 +43,6 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
-
-      - name: Print Poetry cache status
-        run: |
-          echo "poetry cache hit: ${{ steps.cache-poetry.outputs.cache-hit }}"
 
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
