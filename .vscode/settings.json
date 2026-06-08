@@ -34,6 +34,7 @@
   "cSpell.mergeCSpellSettings": true,
   "cSpell.words": [
     "addopts",
+    "aiodns",
     "almenon",
     "apdisk",
     "arepl",
@@ -79,6 +80,7 @@
     "HNSJ",
     "htmlcov",
     "httpx",
+    "idna",
     "ipynb",
     "ipython",
     "isort",
