@@ -1,20 +1,20 @@
 """Metrics service module."""
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import psutil
-
-if TYPE_CHECKING:
-    from psutil._ntuples import sdiskusage, svmem
 
 
 async def get_metrics() -> dict[str, Any]:
     """Collect system metrics."""
-    virtual_memory: svmem = psutil.virtual_memory()
-    disk_usage: sdiskusage = psutil.disk_usage("/")
+    import asyncio
+
+    virtual_memory = psutil.virtual_memory()
+    disk_usage = psutil.disk_usage("/")
+    cpu_percent = await asyncio.to_thread(psutil.cpu_percent, 0.5)
     return {
         "cpu": {
-            "percent": psutil.cpu_percent(interval=0.5),
+            "percent": cpu_percent,
             "cores": psutil.cpu_count(),
         },
         "memory": {
