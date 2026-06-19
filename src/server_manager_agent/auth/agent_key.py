@@ -1,10 +1,11 @@
 """Authentication module."""
 
+from hmac import compare_digest
 from pathlib import Path
 
 import anyio
 
-AGENT_KEY_FILE = Path("agent.key")
+AGENT_KEY_FILE = Path(__file__).parent.parent.parent / "agent.key"
 """Path to the Agent key file."""
 
 
@@ -16,7 +17,7 @@ async def load_agent_key() -> str:
             content = await f.read()
         return content.strip()
     except FileNotFoundError as e:
-        msg = "Missing Agent key file: agent.key"
+        msg = f"Missing Agent key file: {AGENT_KEY_FILE}"
         raise RuntimeError(msg) from e
 
 
@@ -25,4 +26,4 @@ async def verify_agent_key(provided_key: str | None) -> bool:
     if not provided_key:
         return False
 
-    return provided_key == await load_agent_key()
+    return compare_digest(provided_key, await load_agent_key())
