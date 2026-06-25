@@ -1245,14 +1245,14 @@ cli = ["tomli ; python_version < \"3.11\""]
 
 [[package]]
 name = "distlib"
-version = "0.4.2"
+version = "0.4.3"
 description = "Distribution utilities"
 optional = false
 python-versions = "*"
 groups = ["dev"]
 files = [
-    {file = "distlib-0.4.2-py2.py3-none-any.whl", hash = "sha256:ca4cb11e5d746b5ec13c199cbf19ae27a241f89702b54e153a74332955446067"},
-    {file = "distlib-0.4.2.tar.gz", hash = "sha256:baeb401c90f27acd15c4861ae0847d1e731c27ac3dbf4210643ba61fa1e813db"},
+    {file = "distlib-0.4.3-py2.py3-none-any.whl", hash = "sha256:4b0ce306c966eb73bc3a7b6abad017c556dadd92c44701562cd528ac7fde4d5b"},
+    {file = "distlib-0.4.3.tar.gz", hash = "sha256:f152097224a0ae24be5a0f6bae1b9359af82133bce63f98a95f86cae1aede9ed"},
 ]
 
 [[package]]
@@ -4996,4 +4996,4 @@ type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14,<3.15"
-content-hash = "8d6fceced8d3ca4271bf83b5dc135d9e452b182c1902e89ee4d9c58b7f800878"
+content-hash = "34604e5b830b51343e5c64ecea8a7fba3fa390a2226d53f144338981a5218ee2"
