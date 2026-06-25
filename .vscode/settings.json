@@ -158,6 +158,7 @@
     "stackoverflow",
     "svmem",
     "tamasfe",
+    "tqdm",
     "tryceratops",
     "unindexed",
     "uvicorn",
