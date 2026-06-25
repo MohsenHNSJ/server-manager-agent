@@ -43,6 +43,7 @@
     "ASGI",
     "asyncio",
     "autopep",
+    "beautifulsoup",
     "capsys",
     "celerybeat",
     "charliermarsh",
