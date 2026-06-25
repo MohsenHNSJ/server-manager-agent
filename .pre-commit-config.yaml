@@ -16,7 +16,7 @@ repos:
     hooks:
       - id: pre-commit-update
 
-    # Detect secrets like passwords, API keys, and tokens
+  # Detect secrets like passwords, API keys, and tokens
   # - repo: https://github.com/gitleaks/gitleaks
   #   rev: v8.30.1
   #   hooks:
@@ -57,7 +57,7 @@ repos:
         # Validate GitHub Issue config
       - id: check-github-issue-config
 
-    # Static checker for GitHub Actions workflow files
+  # Static checker for GitHub Actions workflow files
   # - repo: https://github.com/rhysd/actionlint
   #   rev: v1.7.12
   #   hooks:
@@ -183,11 +183,11 @@ ci:
   # Skip the following hooks in pre-commit.ci
   # poetry-lock fails as the CI runners are not connected to internet.
   # skip: [poetry-lock, vale]
-    skip: [poetry-lock]
+  skip: [poetry-lock]
   # Disable auto-fixing PRs
-    autofix_prs: false
+  autofix_prs: false
   # Send auto-update PRs to the following branch
-    autoupdate_branch: "dev"
+  autoupdate_branch: "dev"
   # Control when the autoupdate runs
   # We are setting it to quarterly as we already have pre-commit-update hook
-    autoupdate_schedule: "quarterly"
+  autoupdate_schedule: "quarterly"
