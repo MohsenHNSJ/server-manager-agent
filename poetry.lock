@@ -4396,21 +4396,20 @@ files = [
 
 [[package]]
 name = "tqdm"
-version = "4.68.1"
+version = "4.68.3"
 description = "Fast, Extensible Progress Meter"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 groups = ["dev"]
 files = [
-    {file = "tqdm-4.68.1-py3-none-any.whl", hash = "sha256:fea4a90e4023f764914569f7802a297277c5ab1a66be5144143e142e1a4031d8"},
-    {file = "tqdm-4.68.1.tar.gz", hash = "sha256:fc163d96b287bd031e1aa24421ce4411b25559bd0a1be4fe649bdaa4d2c02bf5"},
+    {file = "tqdm-4.68.3-py3-none-any.whl", hash = "sha256:39832cc2def2789a6f29df83f172db7416cea70052c0907a57801c5f2fdccb03"},
+    {file = "tqdm-4.68.3.tar.gz", hash = "sha256:00dfa48452b6b6cfae3dd9885636c23d3422d1ec97c66d96818cbd5e0821d482"},
 ]
 
 [package.dependencies]
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [package.extras]
-dev = ["nbval", "pytest (>=6)", "pytest-asyncio (>=0.24)", "pytest-cov", "pytest-timeout"]
 discord = ["envwrap", "requests"]
 notebook = ["ipywidgets (>=6)"]
 slack = ["envwrap", "slack-sdk"]
@@ -4996,4 +4995,4 @@ type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14,<3.15"
-content-hash = "8d6fceced8d3ca4271bf83b5dc135d9e452b182c1902e89ee4d9c58b7f800878"
+content-hash = "fee71fccfa14516912b378fe0c90990e5313ebdd99500ca04a28bf2a969e614b"
