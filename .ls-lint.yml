@@ -32,3 +32,4 @@ ignore:
   - .pytest_cache
   - __pycache__
   - README.md
+  - osv-scanner.toml
