@@ -168,6 +168,7 @@
     "venv",
     "venvs",
     "virtualenvs",
+    "wcwidth",
     "webassets",
     "zizmor"
   ],
