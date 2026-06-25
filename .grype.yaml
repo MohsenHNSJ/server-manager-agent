@@ -189,3 +189,18 @@ ignore:
     package:
       name: docker
       type: python
+
+  - vulnerability: GHSA-p4gq-832x-fm9v
+    package:
+      name: nltk
+      type: python
+
+  - vulnerability: CVE-2026-42306
+    package:
+      name: docker
+      type: python
+
+  - vulnerability: CVE-2026-41568
+    package:
+      name: docker
+      type: python
