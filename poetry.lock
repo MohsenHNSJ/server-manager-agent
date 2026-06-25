@@ -3562,6 +3562,7 @@ description = "Python for Windows Extensions"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
+markers = "sys_platform == \"win32\""
 files = [
     {file = "pywin32-312-cp310-cp310-win32.whl", hash = "sha256:772235332b5d1024c696f11cea1ae4be7930f0a8b894bb43db14e3f435f1ff7e"},
     {file = "pywin32-312-cp310-cp310-win_amd64.whl", hash = "sha256:5dbc35d2b5320dc07f25fa31269cfb767471002b17de5eb067d03da68c7cb2db"},
