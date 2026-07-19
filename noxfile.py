@@ -63,6 +63,31 @@ pre_commit_commands: list[str] = [
 ]
 # endregion PRE-COMMIT
 
+# region HELPERS
+
+
+def install_requirements(
+    session: nox.sessions.Session,
+    *requirements: str,
+) -> None:
+    """Install pip requirements using the project constraint file."""
+    session.run(
+        *pip_install,
+        constraint,
+        *requirements,
+        silent=True,
+    )
+
+
+def install_package(
+    session: nox.sessions.Session,
+) -> None:
+    """Install the current package."""
+    session.install(".", silent=True)
+
+
+# endregion HELPERS
+
 
 @nox.session(name="ruff-check", python=python_version, tags=["check"])
 def ruff_check(session: nox.sessions.Session) -> None:
@@ -72,7 +97,7 @@ def ruff_check(session: nox.sessions.Session) -> None:
         session (nox.session.Session): An environment and a set of commands to run.
     """
     # Install requirements
-    session.run(*pip_install, constraint, "ruff", silent=True)
+    install_requirements(session, "ruff")
     # If argument is provided, append to command to fix errors
     if session.posargs:
         # Join the characters of input argument into a single string
@@ -91,9 +116,9 @@ def mypy_type(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install the package
-    session.install(".", silent=True)
+    install_package(session)
     # Install requirements
-    session.run(*pip_install, constraint, *mypy_requirements, silent=True)
+    install_requirements(session, *mypy_requirements)
     # Run MyPy type checking
     session.run("mypy", *mypy_commands)
 
@@ -106,9 +131,9 @@ def test(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install the package
-    session.install(".", silent=True)
+    install_package(session)
     # Install requirements
-    session.run(*pip_install, constraint, *pytest_requirements, silent=True)
+    install_requirements(session, *pytest_requirements)
     # Run tests
     session.run("coverage", "run", "--parallel", "-m", "pytest", "-rF")
 
@@ -121,7 +146,7 @@ def coverage(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install requirements
-    session.run(*pip_install, constraint, "coverage", silent=True)
+    install_requirements(session, "coverage")
     # Combine coverage data
     session.run("coverage", "combine")
     # Report the combined data
@@ -154,9 +179,9 @@ def benchmark(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install the package
-    session.install(".", silent=True)
+    install_package(session)
     # Install requirements
-    session.run(*pip_install, constraint, *pytest_requirements, silent=True)
+    install_requirements(session, *pytest_requirements)
     # Run pytest for codspeed
     session.run(*benchmark_commands)
 
@@ -169,17 +194,12 @@ def pre_commit(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install requirements
-    session.run(
-        *pip_install,
-        constraint,
-        *pre_commit_requirements,
-        silent=True,
-    )
+    install_requirements(session, *pre_commit_requirements)
     # Run pre-commit
     session.run(*pre_commit_commands)
 
 
-@nox.session(name="safety-cli", python="3.14", tags=["safety"])
+@nox.session(name="safety-cli", python=python_version, tags=["safety"])
 def safety_cli(session: nox.sessions.Session) -> None:
     """Runs the Safety CLI.
 
@@ -187,7 +207,7 @@ def safety_cli(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install requirements
-    session.run(*pip_install, constraint, "safety", silent=True)
+    install_requirements(session, "safety")
     # Login to Safety
     session.run("safety", "auth", "login")
     # Validate policy file
@@ -210,9 +230,9 @@ def build(session: nox.sessions.Session) -> None:
         session (nox.sessions.Session): An environment and a set of commands to run.
     """
     # Install the package
-    session.install(".", silent=True)
+    install_package(session)
     # Install requirements
-    session.run(*pip_install, constraint, "pyinstaller", silent=True)
+    install_requirements(session, "pyinstaller")
     # Clean previous builds
     session.run("rm", "-rf", "build", "dist", external=True)
 
