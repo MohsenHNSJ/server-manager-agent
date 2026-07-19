@@ -63,6 +63,7 @@ python-discovery = "1.4.4"
 pywin32 = { version = "312", markers = "sys_platform == 'win32'" }
 ruff = "0.15.16"
 safety = "3.8.1"
+setuptools = "83.0.0"
 tqdm = "4.68.3"
 types-psutil = "7.2.2.20260518"
 wcwidth = "0.8.1"

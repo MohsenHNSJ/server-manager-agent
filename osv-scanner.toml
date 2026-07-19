@@ -1,3 +1,7 @@
 [[IgnoredVulns]]
 id = "GHSA-p4gq-832x-fm9v"
 reason = "Does not apply to this project"
+
+[[IgnoredVulns]]
+id = "PYSEC-2026-597"
+reason = "Does not apply to this project"

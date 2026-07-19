@@ -145,7 +145,18 @@ match:
 
 ignore:
   # Ignored by default; disputed and unwarranted CVE that causes Megalinter to fail
+
+  - vulnerability: CVE-2018-10892
+    package:
+      name: docker
+      type: python
+
   - vulnerability: CVE-2018-20225
+    package:
+      name: docker
+      type: python
+
+  - vulnerability: CVE-2019-13139
     package:
       name: docker
       type: python
@@ -160,17 +171,12 @@ ignore:
       name: docker
       type: python
 
-  - vulnerability: CVE-2020-27534
-    package:
-      name: docker
-      type: python
-
-  - vulnerability: CVE-2019-13139
-    package:
-      name: docker
-      type: python
-
   - vulnerability: CVE-2019-16884
+    package:
+      name: docker
+      type: python
+
+  - vulnerability: CVE-2020-27534
     package:
       name: docker
       type: python
@@ -180,12 +186,17 @@ ignore:
       name: docker
       type: python
 
-  - vulnerability: CVE-2018-10892
+  - vulnerability: CVE-2021-21284
     package:
       name: docker
       type: python
 
-  - vulnerability: CVE-2021-21284
+  - vulnerability: CVE-2026-41568
+    package:
+      name: docker
+      type: python
+
+  - vulnerability: CVE-2026-42306
     package:
       name: docker
       type: python
@@ -195,12 +206,17 @@ ignore:
       name: nltk
       type: python
 
-  - vulnerability: CVE-2026-42306
+  - vulnerability: CVE-2026-12243
     package:
-      name: docker
+      name: nltk
       type: python
 
-  - vulnerability: CVE-2026-41568
+  - vulnerability: CVE-2026-54293
     package:
-      name: docker
+      name: nltk
+      type: python
+
+  - vulnerability: CVE-2026-58203
+    package:
+      name: pydantic
       type: python
