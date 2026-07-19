@@ -45,7 +45,7 @@ repos:
 
     # A set of pre-commit hooks for jsonschema validation.
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.3
+    rev: 0.37.4
     hooks:
       # Validate Dependabot Config (v2)
       - id: check-dependabot
@@ -131,7 +131,7 @@ repos:
 
     # Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.19
+    rev: v0.15.22
     hooks:
       # Run the linter
       - id: ruff
@@ -168,7 +168,7 @@ repos:
   # A fast, flexible, configuration-based command-line interface for linting Markdown/CommonMark files,
   # with the markdownlint library
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.22.1
+    rev: v0.23.1
     hooks:
       - id: markdownlint-cli2
 
