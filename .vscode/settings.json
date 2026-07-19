@@ -37,6 +37,7 @@
     "aiodns",
     "aiohttp",
     "almenon",
+    "anyio",
     "apdisk",
     "arepl",
     "armv",
